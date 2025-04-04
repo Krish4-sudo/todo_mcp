@@ -1,0 +1,188 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo Application</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        .todo-form {
+            display: flex;
+            margin-bottom: 20px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .todo-form input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            min-width: 200px;
+        }
+        .todo-form button {
+            padding: 10px 15px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .todo-form button:hover {
+            background-color: #2980b9;
+        }
+        .todo-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .todo-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            transition: background-color 0.3s;
+        }
+        .todo-item:hover {
+            background-color: #f9f9f9;
+        }
+        .todo-item.completed {
+            opacity: 0.7;
+            background-color: #f1f8e9;
+        }
+        .todo-item.completed .todo-title {
+            text-decoration: line-through;
+            color: #7f8c8d;
+        }
+        .todo-checkbox {
+            margin-right: 15px;
+            transform: scale(1.2);
+            cursor: pointer;
+        }
+        .todo-content {
+            flex: 1;
+        }
+        .todo-title {
+            font-size: 18px;
+            margin: 0 0 5px 0;
+        }
+        .todo-description {
+            color: #7f8c8d;
+            font-size: 14px;
+            margin: 0;
+        }
+        .todo-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .todo-actions a {
+            color: #7f8c8d;
+            text-decoration: none;
+            font-size: 16px;
+            transition: color 0.3s;
+        }
+        .todo-actions a:hover {
+            color: #e74c3c;
+        }
+        .todo-date {
+            font-size: 12px;
+            color: #95a5a6;
+            margin-bottom: 5px;
+        }
+        .no-todos {
+            text-align: center;
+            color: #7f8c8d;
+            padding: 20px;
+            font-style: italic;
+        }
+        .api-info {
+            margin-top: 30px;
+            background-color: #eef5f9;
+            padding: 15px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        .api-info h3 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+        .api-endpoint {
+            font-family: monospace;
+            background-color: #fff;
+            padding: 5px;
+            border-radius: 3px;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Todo Application</h1>
+        
+        <form class="todo-form" action="/todos/create" method="post">
+            <input type="text" name="title" placeholder="What needs to be done?" required>
+            <input type="text" name="description" placeholder="Description (optional)">
+            <button type="submit">Add Todo</button>
+        </form>
+        
+        <ul class="todo-list">
+            {% if todos %}
+                {% for todo in todos %}
+                    <li class="todo-item {% if todo.completed %}completed{% endif %}">
+                        <a href="/todos/complete/{{ todo.id }}" class="todo-checkbox">
+                            <i class="far {% if todo.completed %}fa-check-square{% else %}fa-square{% endif %}"></i>
+                        </a>
+                        <div class="todo-content">
+                            <div class="todo-date">Created: {{ todo.created_at.strftime('%Y-%m-%d %H:%M') }}</div>
+                            <h3 class="todo-title">{{ todo.title }}</h3>
+                            {% if todo.description %}
+                                <p class="todo-description">{{ todo.description }}</p>
+                            {% endif %}
+                        </div>
+                        <div class="todo-actions">
+                            <a href="/todos/delete/{{ todo.id }}" title="Delete"><i class="fas fa-trash-alt"></i></a>
+                        </div>
+                    </li>
+                {% endfor %}
+            {% else %}
+                <li class="no-todos">No todos yet. Add one above!</li>
+            {% endif %}
+        </ul>
+        
+        <div class="api-info">
+            <h3>API Endpoints</h3>
+            <p>This application also provides a RESTful API:</p>
+            <ul>
+                <li><span class="api-endpoint">GET /api/todos/</span> - List all todos</li>
+                <li><span class="api-endpoint">GET /api/todos/{id}</span> - Get a specific todo</li>
+                <li><span class="api-endpoint">POST /api/todos/</span> - Create a new todo</li>
+                <li><span class="api-endpoint">PUT /api/todos/{id}</span> - Update a todo</li>
+                <li><span class="api-endpoint">DELETE /api/todos/{id}</span> - Delete a todo</li>
+            </ul>
+            <p>You can use these endpoints with tools like Claude Desktop for MCP (Model Control Protocol) integration.</p>
+        </div>
+    </div>
+</body>
+</html>

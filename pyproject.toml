@@ -1,0 +1,12 @@
+[project]
+name = "todo-mcp"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi[all]>=0.115.12",
+    "pydantic>=2.11.1",
+    "requests>=2.32.3",
+    "sqlalchemy>=2.0.40",
+]
