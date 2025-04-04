@@ -1,0 +1,23 @@
+{
+    "mcp": {
+      "enabled": true,
+      "port": 8080,
+      "host": "localhost",
+      "allowed_origins": ["http://localhost:8000"],
+      "authentication": {
+        "enabled": false,
+        "api_key": ""
+      },
+      "logging": {
+        "enabled": true,
+        "level": "info",
+        "file_path": "./mcp_logs.txt"
+      },
+      "request_timeout_seconds": 60,
+      "max_tokens_per_request": 4000
+    },
+    "claude_desktop": {
+      "api_base_url": "http://localhost:8000/api",
+      "default_model": "claude-3-opus-20240229"
+    }
+  }
